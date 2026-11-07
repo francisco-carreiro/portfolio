@@ -1,0 +1,346 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#171c1a">
+<meta name="color-scheme" content="dark">
+<meta name="description" content="Offline phone preview of current Salty Siren Living Vessel and Captain Mission Control. Sample data only; no network calls.">
+<title>The Salty Siren — Current State Preview (Captain’s Mission Control)</title>
+<style>
+:root{--night:#151b19;--night-2:#222924;--wood:#332922;--wood-2:#4a3829;--line:#846d4e;--gold:#d1ae78;--ivory:#f5e6c8;--mist:#b7ac94;--sea:#8eaa9c;--vellum:#ddc79f;--ink:#32291f;--rust:#9c5c43;--unit:10px;scrollbar-color:#756043 #1a211c}
+*,*::before,*::after{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;min-height:100vh;color:var(--ivory);font-family:Georgia,'Times New Roman',serif;background:radial-gradient(ellipse at 50% -10%,#57412d55,transparent 55%),repeating-linear-gradient(0deg,transparent 0,transparent 3px,#f0ce9810 4px,transparent 5px),var(--night)}button{font:inherit;cursor:pointer}button:focus-visible,[tabindex]:focus-visible{outline:3px solid #b7ecd5;outline-offset:3px}button:disabled{cursor:not-allowed;opacity:.45}p{line-height:1.6}h1,h2,h3{font-weight:400}button,select{touch-action:manipulation}svg{display:block}a{color:var(--gold)}[hidden]{display:none!important}
+.frame{width:min(1500px,100%);margin:auto;min-height:100vh;overflow:hidden;position:relative}
+.preview-ribbon{min-height:30px;background:#b18b58;color:#251e19;display:flex;gap:9px;align-items:center;justify-content:center;padding:8px 16px;text-align:center;font:700 9px/1.5 'Courier New',monospace;letter-spacing:.105em}
+.preview-ribbon b{border:1px solid #4d3828;padding:2px 5px}
+.mast{height:74px;display:flex;align-items:center;justify-content:space-between;padding:0 clamp(18px,4.6vw,70px);border-bottom:1px solid #977a50;background:linear-gradient(90deg,#20251f,#191e1b);gap:12px;position:relative;z-index:5}
+.emblem{flex:none;width:46px;height:46px;border:1px solid #c2a576;box-shadow:0 0 0 4px #b49a6930;display:grid;place-items:center;font-size:27px;color:#e9d5ad;background:#25352e}
+.mast .brand{display:flex;align-items:center;gap:12px;min-width:0}.brand-text{display:grid;gap:5px}.brand-text .ship{font:700 clamp(14px,2.1vw,19px)/1 Georgia,serif;letter-spacing:.11em;white-space:nowrap}.brand-text .tag{color:#c5ae89;letter-spacing:.14em;font:9px 'Courier New',monospace;white-space:nowrap}
+.mast-actions{display:flex;align-items:center;gap:12px}.clock{font:10px 'Courier New',monospace;color:#b7ad93;white-space:nowrap}.captain-key{padding:9px 11px;background:transparent;color:#e5c998;border:1px solid #957750;font:700 10px 'Courier New',monospace;letter-spacing:.08em}
+.hero{padding:30px clamp(18px,4.6vw,70px) 22px;display:grid;grid-template-columns:minmax(0,1.4fr) minmax(220px,.6fr);gap:25px;align-items:end}
+.eyebrow,.serial{font:700 10px 'Courier New',monospace;letter-spacing:.19em;color:#d2b17d}.eyebrow{display:flex;gap:19px;flex-wrap:wrap}.eyebrow .dim{color:#88775e}.hero h1{font:italic 400 clamp(48px,6.5vw,96px)/.99 Georgia,serif;letter-spacing:-.055em;margin:13px 0 10px;text-shadow:0 4px 25px #0006}.hero p{max-width:550px;margin:0;font:13px/1.6 system-ui,sans-serif;color:#c1b69f}
+.hero-motto{text-align:right;display:grid;gap:8px;justify-items:end;border-right:3px solid #99784e;padding-right:16px}.hero-motto span{font:10px 'Courier New',monospace;letter-spacing:.11em;color:#aa9d88}.hero-motto strong{font:italic 24px Georgia,serif;color:#e6cba0}.hero-motto small{font:10px 'Courier New',monospace;color:#8ea99a}
+.voyage-layout{display:grid;grid-template-columns:minmax(0,1.7fr) minmax(290px,.75fr);gap:24px;padding:0 clamp(18px,4.6vw,70px);align-items:start}
+.labelrow{display:flex;justify-content:space-between;align-items:flex-end;gap:15px;min-height:61px;border-bottom:1px solid #846b4b;padding-bottom:11px}.labelrow .label{display:grid;gap:6px}.labelrow strong{font:italic 26px Georgia,serif;color:#f1dcb6}.labelrow small{color:#b4a28a;font:9px/1.6 'Courier New',monospace;letter-spacing:.08em;text-align:right}
+.map-container{margin-top:17px;background:#352b21;border:10px solid #2a221d;position:relative;box-shadow:0 10px 0 #110d0c,0 25px 55px #0008;aspect-ratio:1200/765;overflow:hidden}.map-container:after{content:'';pointer-events:none;position:absolute;inset:0;box-shadow:inset 0 0 40px #2e21163f;z-index:3}.map-container svg{position:absolute;width:100%;height:100%;inset:0}
+.map-pins{position:absolute;inset:0;z-index:4;pointer-events:none}.map-pin{position:absolute;transform:translate(-50%,-50%) rotate(-3deg);width:clamp(112px,15vw,182px);min-height:70px;background:#eeddb8;color:#3e2e21;box-shadow:3px 5px 0 #7d593c80,5px 10px 17px #1c120d68;padding:10px;border:1px solid #866441;border-left:4px solid #915740;text-align:left;pointer-events:auto;display:grid;gap:5px;z-index:1}.map-pin:nth-child(even){transform:translate(-50%,-50%) rotate(2deg)}.map-pin:before{content:'';width:13px;height:13px;background:radial-gradient(circle at 32% 25%,#edbe83,#9d5434 60%,#40251f);border:1px solid #65422a;position:absolute;top:-8px;left:50%;border-radius:50%}.map-pin small{font:9px 'Courier New',monospace;letter-spacing:.11em;color:#95704c}.map-pin strong{font:700 13px/1.2 Georgia,serif;overflow-wrap:anywhere}.map-pin i{font:9px 'Courier New',monospace;color:#765e43;text-transform:uppercase;font-style:normal}.map-pin:focus-visible,.map-pin:hover{z-index:5;filter:brightness(1.06)}
+.chart-caption{display:flex;justify-content:space-between;gap:12px;padding:18px 0 8px;color:#aa9779;font:9px/1.7 'Courier New',monospace;letter-spacing:.13em}
+.manifest{background:var(--vellum);border:1px solid #9b7f56;border-left:7px solid #80603b;color:var(--ink);margin-top:16px;padding:25px 23px 24px;box-shadow:6px 7px 0 #0c100e77,0 25px 65px #0006;position:relative}.manifest:before{content:'';width:55px;height:55px;border-top:1px solid #90724a;border-right:1px solid #90724a;position:absolute;right:11px;top:9px;opacity:.6}.manifest h2{font:italic 39px/1 Georgia,serif;margin:11px 0}.manifest>p{font:12px/1.6 system-ui,sans-serif;color:#64533c;margin:0 0 20px}.manifest .serial{color:#855f3e}.big-stats{display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid #b09470;border-bottom:1px solid #b09470;margin:15px 0 21px}.big-stats div{display:grid;gap:3px;text-align:center;padding:12px 3px;border-right:1px solid #b09470}.big-stats div:last-child{border-right:0}.big-stats strong{font-size:30px;font-weight:400}.big-stats span{font:9px 'Courier New',monospace;letter-spacing:.08em;color:#765d40}.ledger-title{display:flex;align-items:center;justify-content:space-between;gap:10px;border-bottom:1px solid #aa8a65;padding:8px 0}.ledger-title strong{font:700 10px 'Courier New',monospace;letter-spacing:.07em;color:#694e31}.ledger-title button{background:none;border:0;color:#735537;text-decoration:underline;font:10px Georgia,serif}.ledger-row{display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:center;padding:14px 0;border-bottom:1px dashed #baa380}.ledger-row .diamond{font-size:19px;color:#81603c}.ledger-info{display:grid;gap:5px;min-width:0}.ledger-info strong{font:700 13px Georgia,serif}.ledger-info small{font:9px 'Courier New',monospace;color:#8b6c4f}.status{font:9px 'Courier New',monospace;text-transform:uppercase;color:#56735e}.status.waiting{color:#997447}.status.review{color:#975740}.manifest-note{font:10px/1.65 'Courier New',monospace;color:#81674a;margin-top:15px}
+.run-row{display:grid;grid-template-columns:10px 1fr auto;align-items:center;gap:10px;padding:13px 0;border-bottom:1px dashed #baa380}.lamp{width:8px;height:8px;background:#858e70;border:1px solid #4f6752;transform:rotate(45deg)}.lamp.alert{background:#bb7754;border-color:#935534}.run-info{display:grid;gap:4px}.run-info strong{font:700 12px Georgia,serif}.run-info small,.run-row time{font:9px 'Courier New',monospace;color:#7a6244}
+.ships-deck{margin:38px clamp(18px,4.6vw,70px) 0;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px}.station{padding:18px 11px;border:1px solid #846745;border-top:3px solid #b39465;background:linear-gradient(145deg,#2e2a23,#1d2420);color:#e8d5b2;display:grid;grid-template-columns:auto 1fr auto;gap:8px;align-items:center;text-align:left;font:700 10px 'Courier New',monospace;letter-spacing:.05em}.station:hover,.station[aria-pressed=true]{background:#463929;border-top-color:#e4c18a}.station .icon{font-size:22px;color:#e0b984}.station span:last-child{font-size:15px;color:#ab946e}
+.lower-room{margin:25px clamp(18px,4.6vw,70px) 0;padding:0 0 24px}.lower-room>div{border-top:1px solid #7f674a;padding-top:18px}.lower-room h2{font:italic 33px Georgia,serif;margin:0 0 9px}.lower-room p{font:12px/1.7 system-ui,sans-serif;color:#bcb19c}.details-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.dossier{border:1px solid #857051;background:#29372e;padding:19px}.dossier h3{font-size:21px;margin:12px 0 4px;color:#f0d7ab}.dossier p{margin:4px 0}.dossier small{font:10px 'Courier New',monospace;color:#c19e6c}.dossier em{font:italic 12px Georgia,serif;color:#a6c4ac}.linkish{border:1px solid #af9064;background:#a88a61;color:#201c17;padding:10px 12px;font:700 11px 'Courier New',monospace;letter-spacing:.06em;margin-top:11px}
+.captains-log{padding:19px 20px;border-left:5px solid #a7895b;background:#2c322a;margin-top:15px}.log-line{display:grid;grid-template-columns:70px 1fr;gap:14px;align-items:start;padding:13px 0;border-bottom:1px solid #554b39}.log-line:last-child{border-bottom:0}.log-line span{color:#bfa273;font:10px 'Courier New',monospace}.log-line p{margin:0;font-size:12px}.log-line strong{color:#ead1a7}
+.foot{display:flex;justify-content:space-between;gap:20px;padding:21px clamp(18px,4.6vw,70px) 31px;margin-top:25px;border-top:1px solid #765f42;color:#a9977b;font:10px/1.5 'Courier New',monospace;letter-spacing:.07em}
+/* Strong phone-specific art direction rather than shrinking a desktop SaaS page. */
+@media(max-width:980px){.hero{grid-template-columns:1fr}.hero-motto{display:none}.voyage-layout{grid-template-columns:1fr}.manifest{min-height:0;margin-top:8px}.ships-deck{grid-template-columns:repeat(3,minmax(0,1fr))}.map-container{aspect-ratio:1200/650}}
+@media(max-width:590px){.mast{height:69px;padding:0 16px}.emblem{width:40px;height:40px;font-size:24px}.brand-text .ship{font-size:15px}.brand-text .tag{font-size:8px}.clock{display:none}.captain-key{font-size:9px;padding:9px}.hero{padding:27px 20px 19px}.hero h1{font-size:clamp(48px,13vw,68px)}.hero p{font-size:12px}.voyage-layout{padding:0 16px;gap:12px}.labelrow{min-height:50px}.labelrow strong{font-size:22px}.labelrow small{font-size:8px;max-width:125px}.map-container{margin-top:14px;aspect-ratio:0.92;border-width:7px}.map-container svg{width:100%;height:100%}.map-pin{width:105px;min-height:64px;padding:8px}.map-pin strong{font-size:12px}.map-pin small,.map-pin i{font-size:8px}.map-pin[data-pin="third"]{width:99px}.chart-caption{font-size:8px}.manifest{padding:23px 19px}.manifest h2{font-size:36px}.ships-deck{margin:25px 16px 0;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}.station{padding:16px 12px}.lower-room{margin:22px 16px 0}.lower-room h2{font-size:29px}.details-grid{grid-template-columns:1fr}.foot{padding:21px 16px 28px;flex-direction:column;gap:8px;font-size:9px}}
+@media(max-width:380px){.brand-text .ship{font-size:13px}.brand-text .tag{font-size:7px}.hero h1{font-size:47px}.map-pin{width:90px;min-height:58px;padding:6px}.map-pin strong{font-size:11px}.chart-caption span:last-child{display:none}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{scroll-behavior:auto!important;animation:none!important;transition:none!important}}
+/* Accessible native modal has a flat lacquered-paper treatment. */
+dialog{max-width:min(440px,calc(100vw - 26px));width:100%;padding:0;border:1px solid #9e7d53;background:#e4d2b0;color:#2e281e;box-shadow:9px 12px 0 #0007,0 20px 70px #000a}dialog::backdrop{background:#0a0e0dcc;backdrop-filter:blur(2px)}.dialog-body{padding:27px}.dialog-body .serial{color:#815c36}.dialog-body h2{font:italic 34px Georgia,serif;margin:13px 0}.dialog-body p{color:#5a4633;font:13px/1.7 system-ui,sans-serif}.dialog-body .close{float:right;background:transparent;border:1px solid #9d7d51;padding:5px 10px;color:#4b3425;font-size:19px}.dialog-body small{color:#805f43;font:10px 'Courier New',monospace}
+
+/* CURRENT BUILD: Captain's Mission Control — sample-only interactive walkthrough */
+.captain-board{margin:39px clamp(18px,4.6vw,70px) 0;scroll-margin-top:20px}
+.captain-titlebar{padding:18px 0 23px;border-bottom:1px solid #8c7049}
+.captain-titlebar h2{font:italic 400 clamp(37px,5.1vw,67px)/1.06 Georgia,serif;color:#f2dfbc;margin:12px 0;letter-spacing:-.046em}
+.captain-titlebar p{font:13px/1.7 system-ui,sans-serif;color:#c5baa3;max-width:760px;margin:0}
+.captain-titlebar p strong{color:#e9c995}
+.captain-system{background:#29382e;border-left:4px solid #95b49b;color:#d9daba;font:11px/1.6 'Courier New',monospace;padding:12px 16px;margin:16px 0 19px}
+.captain-layout{display:grid;grid-template-columns:minmax(220px,.65fr) minmax(0,1.35fr);gap:17px}
+.captain-ledger,.captain-detail{background:#2c2b24;border:1px solid #8d724a;border-left:4px solid #b89462;min-width:0;box-shadow:5px 6px 0 #090c0a6b}
+.captain-ledger-title{padding:15px 19px;border-bottom:1px solid #6a5b43;display:flex;align-items:center;justify-content:space-between;gap:10px}
+.captain-ledger-title h3{font:italic 25px Georgia,serif;color:#ead7ae;margin:0}
+.captain-ledger-title span{font:9px 'Courier New',monospace;letter-spacing:.08em;color:#aa926c}
+.voyage-list{padding:10px;display:grid;gap:9px;align-content:start}
+.voyage-item{padding:13px;text-align:left;width:100%;min-height:60px;background:#333a2f;color:#efddbb;border:1px solid #6d5f48;display:grid;grid-template-columns:1fr auto;gap:6px;cursor:pointer}
+.voyage-item[aria-pressed=true]{background:#51412c;border-color:#e0b784}
+.voyage-item strong{font:600 15px/1.3 Georgia,serif;overflow-wrap:anywhere}
+.voyage-item span{color:#b7a080;font:10px 'Courier New',monospace;text-transform:uppercase}
+.voyage-item small{grid-column:1/-1;font:10px 'Courier New',monospace;color:#c0ad8f}
+.voyage-details{padding:19px}
+.voyage-details h3{font:italic 31px Georgia,serif;color:#f1dbb8;margin:7px 0}
+.voyage-meta{font:10px/1.6 'Courier New',monospace;color:#c5ae83;margin:0 0 16px}
+.voyage-timeline{list-style:none;padding:0;margin:0;display:grid;gap:12px}
+.voyage-stage{background:#e4d0aa;color:#322921;border-left:5px solid #9a764c;padding:16px;min-width:0}
+.voyage-stage[data-state="review"]{border-color:#b7793d}.voyage-stage[data-state="running"]{border-color:#347e70}.voyage-stage[data-state="cancelled"]{border-color:#ae5a48}
+.voyage-stagehead{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.voyage-stagehead strong{font:600 16px Georgia,serif}
+.voyage-stagehead em{font:10px 'Courier New',monospace;color:#855c35;font-style:normal;letter-spacing:.05em}
+.voyage-stagehead small{margin-left:auto;font:10px 'Courier New',monospace;text-transform:uppercase;color:#895f3c}
+.voyage-stage p{font:13px/1.55 system-ui,sans-serif;color:#594735;margin:10px 0 6px}
+.voyage-evidence{font:10px 'Courier New',monospace;color:#795838}
+.voyage-output{background:#f3e5cd;color:#3d3025;border:1px solid #b39a74;padding:12px;max-height:225px;overflow:auto;white-space:pre-wrap;overflow-wrap:anywhere;font:12px/1.6 'Courier New',monospace;margin:10px 0 0}
+.voyage-approval{border-top:1px solid #786549;padding-top:19px;margin-top:17px;display:grid;gap:10px}
+.voyage-approval label{color:#e7d1a8;font:12px Georgia,serif}
+.voyage-approval textarea{min-height:95px;width:100%;font:14px/1.5 system-ui,sans-serif;background:#1a2922;color:#f5e5c7;border:1px solid #b09266;padding:11px;resize:vertical}
+.voyage-controls{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+.voyage-controls button{min-height:50px;padding:10px 12px;font:12px/1.4 Georgia,serif;border:1px solid #bd9967;background:#3f392b;color:#f1deb5;cursor:pointer}
+.voyage-controls .approve,.voyage-controls .start{background:#c2a06c;border-color:#e0bc80;color:#33281d}
+.voyage-controls .reject,.voyage-controls .stop{background:#562f28;border-color:#be7359;color:#f7d1bf}
+.voyage-note{font:12px/1.6 system-ui,sans-serif;color:#c8b493;margin:10px 0}
+.voyage-feedback{min-height:24px;color:#bad9c0;font:12px/1.5 system-ui,sans-serif;margin:9px 0}
+.mobile-orders{display:none}
+.mobile-command-dock{display:none}
+@media(max-width:1000px){.captain-layout{grid-template-columns:1fr}.voyage-list{grid-template-columns:repeat(2,minmax(0,1fr))}.voyage-details{padding:16px}}
+@media(max-width:590px){
+ body{padding-bottom:calc(83px + env(safe-area-inset-bottom,0px))}
+ .ships-deck{grid-template-columns:repeat(3,minmax(0,1fr))}
+ .captain-board{margin:30px 16px 0;scroll-margin-top:12px}
+ .captain-titlebar h2{font-size:40px}
+ .voyage-list{grid-template-columns:1fr}
+ .captain-ledger-title{padding:12px 13px}.captain-ledger-title h3{font-size:22px}
+ .voyage-details{padding:13px}
+ .voyage-stage{padding:13px}
+ .voyage-stagehead small{margin-left:0}
+ .voyage-controls{grid-template-columns:1fr}
+ .voyage-controls button{min-height:52px}
+ .map-pins{display:none}
+ .map-container{aspect-ratio:1.45}
+ .mobile-orders{display:grid;gap:8px;margin:14px 0}
+ .mobile-order{display:grid;grid-template-columns:30px minmax(0,1fr) 20px;align-items:center;gap:9px;min-height:58px;border:1px solid #a1845b;border-left:4px solid #855741;background:#e7d3ac;color:#3f3126;text-align:left;padding:11px;cursor:pointer}
+ .mobile-order small{font:10px 'Courier New',monospace;color:#886b48}
+ .mobile-order strong{font:600 15px Georgia,serif;overflow-wrap:anywhere}
+ .mobile-command-dock{position:fixed;left:0;right:0;bottom:0;z-index:99;display:grid;grid-template-columns:repeat(6,minmax(0,1fr));padding:5px max(4px,env(safe-area-inset-left,0px)) calc(5px + env(safe-area-inset-bottom,0px)) max(4px,env(safe-area-inset-right,0px));background:#171e1aef;border-top:1px solid #bb925d;box-shadow:0 -8px 26px #0009;backdrop-filter:blur(10px)}
+ .mobile-command-dock button{min-height:56px;min-width:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;border:1px solid transparent;background:none;color:#d1b78c;padding:3px 1px;cursor:pointer}
+ .mobile-command-dock button[aria-current="page"]{background:#4f402f;color:#f8dfb6;border-top:2px solid #e1b778}
+ .mobile-command-dock button span{font-size:21px;line-height:1}
+ .mobile-command-dock button small{font:9px 'Courier New',monospace;letter-spacing:.01em}
+ .foot{padding-bottom:30px}
+}
+@media(max-width:380px){.mobile-command-dock button small{font-size:8px}.captain-titlebar h2{font-size:36px}}
+
+</style>
+</head>
+<body>
+<div class="frame" id="app">
+ <div class="preview-ribbon"><b>CURRENT BUILD PREVIEW</b> MAIN · 8114454 · OFFLINE SAMPLE DATA · NO REAL AGENTS</div>
+ <header class="mast">
+  <div class="brand"><div class="emblem" aria-hidden="true">✥</div><div class="brand-text"><strong class="ship">THE SALTY SIREN</strong><span class="tag">S.S. / CAPTAIN’S QUARTERS</span></div></div>
+  <div class="mast-actions"><span class="clock">AZORES · LOCAL EDITION</span><button class="captain-key" id="about">PREVIEW INFO ↗</button></div>
+ </header>
+ <section class="hero">
+  <div><div class="eyebrow"><span>CAPTAIN’S LOG // VOL. I</span><span class="dim">THE AZURE COMPASS</span></div><h1>The Living<br>Vessel.</h1><p>A working ship of people, decisions and signals. An interactive walkthrough of the current Salty Siren interface — including Captain’s Mission Control.</p></div>
+  <div class="hero-motto"><span>THE CAPTAIN’S CREED</span><strong>Order before action.</strong><small>AUTHORITY RESTS WITH THE HUMAN</small></div>
+ </section>
+ <div class="voyage-layout">
+  <section aria-label="Chart of active orders">
+   <div class="labelrow"><div class="label"><span class="serial">THE CAPTAIN’S TABLE</span><strong>Chart of active orders</strong></div><small>ILLUSTRATIVE COORDINATES<br>SELECT A SEALED ORDER</small></div>
+   <div class="map-container" id="map">
+    <svg aria-hidden="true" viewBox="0 0 1200 765" preserveAspectRatio="xMidYMid slice">
+     <defs><pattern id="paper-lines" width="140" height="140" patternUnits="userSpaceOnUse"><path d="M0 0L140 0 M0 0L0 140" fill="none" stroke="#9e825e" stroke-width="1" opacity=".45" /></pattern><pattern id="flecks" width="80" height="80" patternUnits="userSpaceOnUse"><path d="M2 11h20M31 58h37M48 22h21" fill="none" stroke="#946f42" stroke-width=".55" opacity=".18"/></pattern></defs>
+     <rect width="1200" height="765" fill="#d9c39d"/><rect width="1200" height="765" fill="url(#paper-lines)"/><rect width="1200" height="765" fill="url(#flecks)"/>
+     <path d="M-30 -20L283 -20 247 82 271 124 238 154 254 196 209 225 218 262 175 296 187 348 140 388 158 452 117 487 108 552 37 588 -30 570Z" fill="#8e9d83" stroke="#5d705d" stroke-width="5"/>
+     <path d="M1215 768L898 768 886 706 841 679 856 615 795 587 808 537 758 502 802 459 848 444 838 385 913 357 940 314 982 297 1009 237 1070 230 1091 203 1215 163Z" fill="#8c9b85" stroke="#596b5c" stroke-width="5"/>
+     <path d="M482 -30 C526 36 523 85 481 108 C434 131 454 156 475 181 C519 237 525 267 487 296 C446 294 444 257 413 224 C376 181 406 148 407 111 L386 -30Z" fill="#95a58c" stroke="#62735f" stroke-width="5"/>
+     <path d="M594 482C628 431 686 445 704 485 C717 521 715 535 738 572 C752 607 734 630 692 634 C661 620 646 641 610 639 C580 607 568 592 584 560 C560 525 574 503 594 482Z" fill="#95a58c" stroke="#62735f" stroke-width="5"/>
+     <path d="M110 535 C300 415 350 585 540 442 S810 371 970 435" fill="none" stroke="#8c5039" stroke-width="3" stroke-dasharray="2 17" stroke-linecap="round"/>
+     <path d="M220 300 C370 225 469 260 561 300 S754 330 940 262" fill="none" stroke="#5e8486" stroke-width="2" stroke-dasharray="9 14" opacity=".7"/>
+     <path d="M301 637 Q437 546 583 579 T885 528" fill="none" stroke="#5e8486" stroke-width="2" stroke-dasharray="9 14" opacity=".7"/>
+     <g transform="translate(1054 145)" stroke="#72593e" stroke-width="2"><circle r="81" fill="none"/><circle r="61" fill="none" stroke-width="1"/><path d="M0 -104 L13 -17 L104 0 L13 17 L0 104 L-13 17 L-104 0 L-13 -17Z" fill="#ab8858"/><path d="M0 -104L13 -17L0 0L-13 -17Z" fill="#5c4032"/><circle r="9" fill="#decea9"/><text x="0" y="-118" stroke="none" text-anchor="middle" font-family="Georgia" font-size="20" fill="#5c4032">N</text></g>
+     <text x="588" y="392" text-anchor="middle" font-size="72" font-family="Georgia" font-style="italic" fill="#536c67" opacity=".22">THE SIREN SEA</text>
+     <text x="588" y="431" text-anchor="middle" font-size="16" font-family="Georgia" letter-spacing="7" fill="#856749">CHART OF COMMAND</text>
+     <text x="90" y="702" font-size="15" font-family="Georgia" font-style="italic" fill="#725739">Illustrative soundings only</text>
+     <rect x="27" y="28" width="1146" height="710" stroke="#85694a" stroke-width="2" fill="none"/>
+    </svg>
+    <div class="map-pins" id="pins"></div>
+   </div>
+   <div class="mobile-orders" id="mobile-orders" aria-label="Sample active orders"></div>
+   <div class="chart-caption"><span>LONGITUDE 25° WEST / MASTER’S EDITION</span><span>✥ SELECT AN ORDER TO INSPECT</span></div>
+  </section>
+  <aside class="manifest" aria-label="Captain's manifest">
+   <span class="serial">THE SHIP’S MANIFEST</span><h2>Orders & crew</h2><p>Illustrative log entries, shown to evaluate the visual design.</p>
+   <div class="big-stats"><div><strong>03</strong><span>ORDERS</span></div><div><strong>03</strong><span>CREWMATES</span></div><div><strong>01</strong><span>VOYAGE</span></div></div>
+   <div class="ledger-title"><strong>LIVE CREW STATIONS</strong><button data-target="crew">OPEN ROSTER ↗</button></div>
+   <div class="ledger-row"><span class="diamond">◇</span><span class="ledger-info"><strong>Navigator · Research</strong><small>Chart the release</small></span><span class="status review">AWAITING REVIEW</span></div>
+   <div class="ledger-row"><span class="diamond">◇</span><span class="ledger-info"><strong>Builder · Engineering</strong><small>Next handoff pending</small></span><span class="status waiting">WAITING</span></div>
+   <div class="ledger-title" style="margin-top:16px"><strong>MODEL SIGNALS</strong><button data-target="signals">OBSERVATORY ↗</button></div>
+   <div class="run-row"><span class="lamp alert"></span><span class="run-info"><strong>Navigator</strong><small>text advisory · example review</small></span><time>21:17</time></div>
+   <div class="run-row"><span class="lamp"></span><span class="run-info"><strong>Inspector</strong><small>model request · illustrative record</small></span><time>21:11</time></div>
+   <p class="manifest-note">✦ Example records only. Real statuses require authenticated SQLite and verified model telemetry; this offline preview makes no requests.</p>
+  </aside>
+ </div>
+
+ <section class="captain-board" id="captain-control" aria-labelledby="captain-headline">
+  <header class="captain-titlebar">
+   <div class="serial">CAPTAIN’S QUARTERS / HUMAN COMMAND</div>
+   <h2 id="captain-headline">Captain’s Mission Control</h2>
+   <p>Review real crew outputs, approve a handoff, or stop a voyage in the installed app. This walkthrough uses <strong>sample records</strong> and performs no actions.</p>
+  </header>
+  <div class="captain-system" role="status" id="captain-status">◉ OFFLINE PREVIEW — Model requests are simulated. All edits stay in this page.</div>
+  <div class="captain-layout">
+   <section class="captain-ledger" aria-labelledby="voyage-heading">
+    <header class="captain-ledger-title"><h3 id="voyage-heading">Voyage ledger</h3><span>3 SAMPLE VOYAGES</span></header>
+    <div id="voyage-list" class="voyage-list" aria-label="Select sample crew voyage"></div>
+   </section>
+   <section class="captain-detail" aria-labelledby="signed-orders-heading">
+    <header class="captain-ledger-title"><h3 id="signed-orders-heading">Signed orders</h3><span>MANAGER REVIEW</span></header>
+    <div id="voyage-details" class="voyage-details" aria-live="polite"></div>
+   </section>
+  </div>
+ </section>
+
+ <nav class="ships-deck" aria-label="Preview stations">
+  <button class="station" data-target="chart" aria-pressed="true"><span class="icon">✥</span><span>CHART</span><span>↗</span></button>
+  <button class="station" data-target="captain" aria-pressed="false"><span class="icon">♜</span><span>CAPTAIN</span><span>↗</span></button>
+  <button class="station" data-target="crew" aria-pressed="false"><span class="icon">⚓</span><span>CREW</span><span>↗</span></button>
+  <button class="station" data-target="missions" aria-pressed="false"><span class="icon">⚑</span><span>MISSIONS</span><span>↗</span></button>
+  <button class="station" data-target="signals" aria-pressed="false"><span class="icon">◈</span><span>SIGNALS</span><span>↗</span></button>
+  <button class="station" data-target="control" aria-pressed="false"><span class="icon">⌘</span><span>CONTROL</span><span>↗</span></button>
+ </nav>
+ <section class="lower-room" id="lower-room" aria-live="polite"><div id="room-content"></div></section>
+ <footer class="foot"><span>THE SALTY SIREN · CURRENT MAIN PREVIEW</span><span>OFFLINE / NO SERVER OR LLM CONNECTION</span></footer>
+
+ <nav class="mobile-command-dock" aria-label="Mobile ship navigation">
+  <button data-dock="chart" aria-current="page"><span aria-hidden="true">⌂</span><small>CHART</small></button>
+  <button data-dock="captain"><span aria-hidden="true">♜</span><small>CAPTAIN</small></button>
+  <button data-dock="crew"><span aria-hidden="true">⚓</span><small>CREW</small></button>
+  <button data-dock="missions"><span aria-hidden="true">⚑</span><small>MISSIONS</small></button>
+  <button data-dock="control"><span aria-hidden="true">⌘</span><small>CONTROL</small></button>
+  <button data-dock="orders"><span aria-hidden="true">▤</span><small>ORDERS</small></button>
+ </nav>
+
+</div>
+<dialog id="order-dialog" aria-labelledby="modal-title"><div class="dialog-body"><button class="close" id="close-dialog" aria-label="Close order">×</button><span class="serial">SEALED ORDER / SAMPLE RECORD</span><h2 id="modal-title">Order</h2><p id="modal-copy"></p><small id="modal-owner"></small><div style="margin-top:18px"><button class="linkish" id="modal-go">VIEW CAPTAIN’S LOG ↗</button></div></div></dialog>
+<dialog id="about-dialog" aria-labelledby="about-title"><div class="dialog-body"><button class="close" id="close-about" aria-label="Close information">×</button><span class="serial">ABOUT THIS ARTIFACT</span><h2 id="about-title">A preview, not a deployment.</h2><p>This file is entirely self-contained. Every visible task, agent and event is illustrative. Tapping controls demonstrates navigation and presentation only — it does not contact an AI model, database, GitHub or your server.</p><p>The real Salty Siren application has protected APIs, crew permissions and persistent records. This current-state preview is for exploring the mobile chart room and Captain’s Mission Control. Review, stop and start actions only change local sample data.</p></div></dialog>
+<script>
+'use strict';
+const examples=[
+ {n:'01',title:'Chart the release',status:'in review',left:26,top:30,detail:'Review the next Salty Siren release and prepare a concise risk brief for the captain.',owner:'Navigator'},
+ {n:'02',title:'Inspect the hull',status:'queued',left:65,top:38,detail:'Review container boundaries, worker leases and execution safeguards before approval.',owner:'Inspector'},
+ {n:'03',title:'Prepare the voyage',status:'queued',left:40,top:73,detail:'Convert approved guidance into a supervised implementation plan. No code execution is authorized.',owner:'Builder'}
+];
+const pins=document.getElementById('pins'),modal=document.getElementById('order-dialog');
+for(const [i,item] of examples.entries()){
+ const b=document.createElement('button');b.className='map-pin';b.style.left=item.left+'%';b.style.top=item.top+'%';b.dataset.pin=i===2?'third':'';b.setAttribute('aria-label','Inspect '+item.title);
+ for(const [tag,text] of [['small',item.n+' / SEALED'],['strong',item.title],['i',item.status]]){const n=document.createElement(tag);n.textContent=text;b.append(n)}
+ const openOrder=()=>{document.getElementById('modal-title').textContent=item.title;document.getElementById('modal-copy').textContent=item.detail;document.getElementById('modal-owner').textContent='ASSIGNED: '+item.owner.toUpperCase()+' · '+item.status.toUpperCase();modal.showModal()};
+ b.addEventListener('click',openOrder);pins.append(b);
+ const row=document.createElement('button');row.className='mobile-order';row.type='button';row.setAttribute('aria-label','Inspect '+item.title);
+ const number=document.createElement('small');number.textContent=item.n;
+ const label=document.createElement('strong');label.textContent=item.title;
+ const arrow=document.createElement('span');arrow.textContent='↗';
+ row.append(number,label,arrow);row.addEventListener('click',openOrder);document.getElementById('mobile-orders').append(row);
+}
+const sections={
+ chart:`<span class="eyebrow">CHART ROOM / 001</span><h2>The captain’s table</h2><p>Tap a pinned order on the illustrated chart to inspect its parchment dossier. The placement is illustrative; the actual application pins real tasks from its database.</p>`,
+ crew:`<span class="eyebrow">CREW QUARTERS / 002</span><h2>The crew’s registry</h2><p>Each agent has a distinct role and an individually granted scope of work. Profiles are not evidence of model execution.</p><div class="details-grid"><article class="dossier"><small>STATION I · RESEARCH</small><h3>Navigator</h3><p>Charts risks and outlines possible approaches.</p><em>Example state: awaiting review</em></article><article class="dossier"><small>STATION II · ENGINEERING</small><h3>Builder</h3><p>Proposes implementation steps from approved findings.</p><em>Example state: waiting</em></article><article class="dossier"><small>STATION III · INSPECTION</small><h3>Inspector</h3><p>Evaluates safety constraints and tests proposed work.</p><em>Example state: waiting</em></article></div>`,
+ missions:`<span class="eyebrow">MISSION COMMAND / 003</span><h2>The chain of command</h2><p>Under real supervision, each crewmate makes a separate model request. The captain reviews the output before the next step can proceed.</p><div class="captains-log"><div class="log-line"><span>STAGE 01</span><p><strong>Navigator</strong> — text analysis prepared for review (example).</p></div><div class="log-line"><span>STAGE 02</span><p><strong>Builder</strong> — cannot begin until Stage 01 is approved.</p></div><div class="log-line"><span>STAGE 03</span><p><strong>Inspector</strong> — final safety review awaits the captain.</p></div></div><button class="linkish" id="mission-demo">SIMULATE APPROVAL ↗</button><p id="simulation-note" role="status">This button only changes the text in the preview; it never runs an AI model.</p>`,
+ signals:`<span class="eyebrow">OBSERVATORY / 004</span><h2>Signals, not theatre</h2><p>Actual request events are recorded by the local model adapter. This offline preview shows illustrative entries only.</p><div class="captains-log"><div class="log-line"><span>21:17</span><p><strong>Navigator</strong> · advisory_text · sample result ready for review.</p></div><div class="log-line"><span>21:11</span><p><strong>Inspector</strong> · sample request · no external tools.</p></div><div class="log-line"><span>—</span><p><strong>Engine</strong> · not connected; this file cannot query your machine.</p></div></div>`,
+ log:`<span class="eyebrow">CAPTAIN’S LEDGER / 005</span><h2>Every order has a record.</h2><p>The real system maintains an audit trail for captain decisions, crew stages and provider requests. No actions are performed from this mockup.</p><div class="captains-log"><div class="log-line"><span>ORDER 01</span><p><strong>Chart the release</strong> · assigned to Navigator.</p></div><div class="log-line"><span>ORDER 02</span><p><strong>Inspect the hull</strong> · awaiting assignment review.</p></div><div class="log-line"><span>ORDER 03</span><p><strong>Prepare the voyage</strong> · queued for captain approval.</p></div></div>`
+};
+sections.control=`<span class="eyebrow">CONTROL STATION / 006</span><h2>The protected engine room</h2><p>This installation uses an authenticated manager session, CSRF-protected writes, per-agent advisory permissions and a default-paused inference policy. In this preview, controls are read-only and no backend is connected.</p><div class="details-grid"><article class="dossier"><small>GLOBAL POLICY</small><h3>Paused by default</h3><p>Manual enablement is required to authorize any real text inference.</p><em>No automatic dispatch</em></article><article class="dossier"><small>WORKER LEASE</small><h3>One crew request</h3><p>A durable lease prevents duplicate crew workers sharing one SQLite database.</p><em>Provider termination is best-effort</em></article></div>`;
+const room=document.getElementById('room-content');
+function show(section,scroll=false){
+ if(!Object.hasOwn(sections,section))return;
+ room.innerHTML=sections[section]; // Static, local, literal demo markup only; never interpolated from user data.
+ document.querySelectorAll('.station').forEach(n=>n.setAttribute('aria-pressed',String(n.dataset.target===section)));
+ if(section==='missions')document.getElementById('mission-demo').addEventListener('click',()=>{document.getElementById('simulation-note').textContent='DEMO ONLY: Navigator approved. Builder is now marked ready in this sample scenario. No model requests were made.'});
+ if(scroll)document.getElementById('lower-room').scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'start'});
+}
+show('chart');
+document.querySelectorAll('[data-target]').forEach(b=>b.addEventListener('click',()=>{
+ if(b.dataset.target==='captain'){goCaptain();return;}
+ show(b.dataset.target,true);
+}));
+document.getElementById('close-dialog').onclick=()=>modal.close();
+document.getElementById('modal-go').onclick=()=>{modal.close();show('log',true)};
+const about=document.getElementById('about-dialog');
+document.getElementById('about').onclick=()=>about.showModal();document.getElementById('close-about').onclick=()=>about.close();
+for(const dialog of [about,modal])dialog.addEventListener('click',e=>{if(e.target===dialog)dialog.close()});
+
+// This is a static, self-contained preview. The real service uses the protected API;
+// all actions here only mutate demoVoyages in memory, never fetch or call a model.
+const demoVoyages=[
+ {id:'release',title:'Chart the release',status:'active',stages:[
+  {agent:'Navigator',responsibility:'Assess risks and propose a release approach.',state:'approved',attempt:'Example request · 21:17',output:'Proposed release checklist:\n1. Verify dependency security.\n2. Validate the model gate and crew permissions.\n3. Deploy only after captain approval.',note:'Scope and risk checks accepted.'},
+  {agent:'Builder',responsibility:'Prepare an implementation plan from the approved findings.',state:'review',attempt:'Example request · 21:29',output:'Implementation outline (example only):\n• Verify CI passes on main.\n• Preserve existing SQLite data.\n• Keep crew model requests text-only.\n• Await explicit approval before moving to inspection.',note:''},
+  {agent:'Inspector',responsibility:'Review the plan and report any safety gaps.',state:'waiting',attempt:null,output:null,note:''}]},
+ {id:'hull',title:'Inspect the hull',status:'active',stages:[
+  {agent:'Inspector',responsibility:'Audit isolation boundaries and report concerns.',state:'running',attempt:'Example request · 21:35',output:null,note:''},
+  {agent:'Navigator',responsibility:'Summarize approved risk findings.',state:'waiting',attempt:null,output:null,note:''}]},
+ {id:'compass',title:'Calibrate the compass',status:'completed',stages:[
+  {agent:'Navigator',responsibility:'Draft a basic telemetry glossary.',state:'approved',attempt:'Example request · 20:40',output:'Recorded requests, simulated activity, and human approvals must always be distinguishable.',note:'Accepted and filed.'},
+  {agent:'Inspector',responsibility:'Review the description for accuracy.',state:'approved',attempt:'Example request · 20:52',output:'No automation is implied by a status indicator alone.',note:'Approved.'}]}
+];
+let selectedVoyage='release';
+const voyageList=document.getElementById('voyage-list'),voyageDetails=document.getElementById('voyage-details'),captainStatus=document.getElementById('captain-status');
+const tag=(name,cls='',text='')=>{const n=document.createElement(name);n.className=cls;n.textContent=text;return n};
+const ctl=(label,cls,click)=>{const b=tag('button',cls,label);b.type='button';b.addEventListener('click',click);return b};
+function say(text){captainStatus.textContent='◉ OFFLINE PREVIEW — '+text}
+function renderVoyages(){
+ voyageList.replaceChildren();
+ for(const v of demoVoyages){
+  const item=ctl('', 'voyage-item',()=>{selectedVoyage=v.id;renderVoyages();renderVoyageDetail()});item.setAttribute('aria-pressed',String(v.id===selectedVoyage));
+  item.append(tag('strong','',v.title),tag('span','',v.status),tag('small','',v.stages.filter(s=>s.state==='approved').length+' / '+v.stages.length+' stages approved'));voyageList.append(item);
+ }
+}
+function renderVoyageDetail(){
+ const v=demoVoyages.find(x=>x.id===selectedVoyage);if(!v)return;
+ voyageDetails.replaceChildren();
+ const meta=tag('div','voyage-meta','SAMPLE / '+v.status.toUpperCase()+' / NO LIVE MODEL');
+ voyageDetails.append(tag('h3','',v.title),meta);
+ const timeline=tag('ol','voyage-timeline');
+ for(const [i,s] of v.stages.entries()){
+  const stage=tag('li','voyage-stage');stage.dataset.state=s.state;
+  const head=tag('div','voyage-stagehead');head.append(tag('em','', 'STAGE '+String(i+1).padStart(2,'0')),tag('strong','',s.agent),tag('small','',s.state.replaceAll('_',' ').toUpperCase()));
+  stage.append(head,tag('p','',s.responsibility),tag('div','voyage-evidence',s.attempt||'No sample model attempt recorded.'));
+  if(s.output)stage.append(tag('pre','voyage-output',s.output));
+  if(s.note)stage.append(tag('p','', 'Captain note: '+s.note));
+  timeline.append(stage);
+ }
+ voyageDetails.append(timeline);
+ const approval=tag('div','voyage-approval');
+ if(v.status==='active'){
+  const review=v.stages.find(s=>s.state==='review');
+  const ready=v.stages.find(s=>s.state==='ready');
+  const running=v.stages.find(s=>s.state==='running');
+  if(review){
+   const label=tag('label','', 'Captain’s review note (required)');label.htmlFor='demo-review-note';
+   const note=tag('textarea');note.id='demo-review-note';note.maxLength=500;note.placeholder='Write why this result should advance or stop.';
+   approval.append(label,note);
+   const controls=tag('div','voyage-controls');
+   controls.append(ctl('Approve handoff','approve',()=>{
+    if(!note.value.trim()){say('Write a review note before approving the sample handoff.');note.focus();return;}
+    review.note=note.value.trim();review.state='approved';const next=v.stages.find(s=>s.state==='waiting');if(next)next.state='ready';else v.status='completed';
+    say('DEMO ONLY: Stage approved. Next crewmate is ready, not automatically started.');renderVoyages();renderVoyageDetail();
+   }),ctl('Reject voyage','reject',()=>{
+    if(!note.value.trim()){say('Write a review note before rejecting the sample.');note.focus();return;}
+    review.note=note.value.trim();review.state='rejected';for(const s of v.stages)if(s.state==='waiting'||s.state==='ready')s.state='cancelled';v.status='rejected';
+    say('DEMO ONLY: Sample voyage rejected. No server request was made.');renderVoyages();renderVoyageDetail();
+   }));approval.append(controls);
+  }
+  if(ready){
+   const controls=tag('div','voyage-controls');controls.append(ctl('Authorize next stage','start',()=>{
+    ready.state='review';ready.attempt='Simulated request · local preview only';ready.output='Sample output created locally. No LLM, API, network, files, or tools were accessed.';
+    say('DEMO ONLY: One sample stage advanced to review. No inference occurred.');renderVoyages();renderVoyageDetail();
+   }));approval.append(controls);
+  }
+  const stop=ctl(running?'Stop sample request':'Cancel sample voyage','stop',()=>{
+   for(const s of v.stages)if(['running','waiting','ready','review'].includes(s.state))s.state='cancelled';v.status='cancelled';
+   say('DEMO ONLY: Sample voyage cancelled. No real request was stopped.');renderVoyages();renderVoyageDetail();
+  });approval.append(stop);
+ }else approval.append(tag('p','voyage-note','This sample voyage is '+v.status+'. Its historical records are read-only.'));
+ const actions=tag('div','voyage-controls');actions.append(ctl('Refresh sample view','',()=>{renderVoyages();renderVoyageDetail();say('Sample records refreshed; no network call was made.')}));approval.append(actions);
+ voyageDetails.append(approval);
+}
+function goCaptain(){
+ document.querySelectorAll('.station').forEach(n=>n.setAttribute('aria-pressed',String(n.dataset.target==='captain')));
+ setDock('captain');document.getElementById('captain-control').scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'start'});
+}
+function setDock(section){
+ document.querySelectorAll('.mobile-command-dock button').forEach(b=>{
+  if(b.dataset.dock===section)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current');
+ });
+}
+document.querySelectorAll('.mobile-command-dock button').forEach(b=>b.addEventListener('click',()=>{
+ const target=b.dataset.dock;
+ if(target==='captain'){goCaptain();return;}
+ setDock(target);
+ if(target==='chart'||target==='orders'){document.getElementById(target==='orders'?'mobile-orders':'map').scrollIntoView({behavior:'smooth',block:'start'});return;}
+ show(target,true);
+}));
+renderVoyages();renderVoyageDetail();
+
+</script>
+</body>
+</html>
